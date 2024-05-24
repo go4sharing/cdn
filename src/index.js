@@ -3,21 +3,24 @@ const multer = require("multer");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const cors = require('cors')
 
 const app = express();
-const port = 3000;
+
+app.use(cors())
+
+const port = process.env.PORT = 3000;
 
 // 配置multer以保存上传的文件
 const upload = multer({ dest: "uploads/" });
 
-// 替换为你的GitHub用户名、仓库名和访问令牌
-const username = "go4sharing";
-const repo = "pictures";
-const token = process.env.GIT_TOKEN;
-
 // 上传图片的路由
 app.post("/upload", upload.single("image"), (req, res) => {
-  const dir = process.env.DIR || "icons";
+  // 替换为你的GitHub用户名、仓库名和访问令牌
+  const username = req.body.username || process.env.GIT_USER;
+  const repo = req.body.repo || process.env.GIT_REPO;
+  const token = req.body.token || process.env.GIT_TOKEN;
+  const dir = req.body.dir || process.env.DIR || "icons";
   const filePath = req.file.path;
 
   const fileName = `${Date.now()}${Math.random().toString(32)}${path.extname(
