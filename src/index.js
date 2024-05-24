@@ -9,18 +9,19 @@ const app = express();
 
 app.use(cors())
 
-const port = process.env.PORT = 3000;
+const port = process.env.PORT || 3000;
 
 // 配置multer以保存上传的文件
 const upload = multer({ dest: "uploads/" });
 
 // 上传图片的路由
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("file"), (req, res) => {
   // 替换为你的GitHub用户名、仓库名和访问令牌
   const username = req.body.username || process.env.GIT_USER;
   const repo = req.body.repo || process.env.GIT_REPO;
   const token = req.body.token || process.env.GIT_TOKEN;
-  const dir = req.body.dir || process.env.DIR || "icons";
+  const dir = req.body.dir || process.env.DIR || "files";
+
   const filePath = req.file.path;
 
   const fileName = `${Date.now()}${Math.random().toString(32)}${path.extname(
